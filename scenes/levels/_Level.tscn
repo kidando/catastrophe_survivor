@@ -1,6 +1,81 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/levels/_Level.gd" type="Script" id=1]
+[ext_resource path="res://scenes/ui/HUD.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/managers/PlayerWeaponFireManager.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/managers/EnemySpawnManager.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/vfx/Impact.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/pickups/SoulCash.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/ui/UpgradeMenu.tscn" type="PackedScene" id=7]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+tonemap_mode = 3
+glow_enabled = true
+glow_levels/2 = true
+glow_levels/4 = true
+glow_levels/6 = true
+glow_intensity = 0.3
+glow_bloom = 0.1
+glow_blend_mode = 1
 
 [node name="_Level" type="Node"]
 script = ExtResource( 1 )
+hud_path = NodePath("ScreenOverlays/HUD")
+run_countdown_ticker_path = NodePath("Timers/RunCountdownTicker")
+
+[node name="GameWorld" type="Node" parent="."]
+
+[node name="Background" type="Node2D" parent="GameWorld"]
+
+[node name="MainGround" type="YSort" parent="GameWorld"]
+
+[node name="Players" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="Enemies" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="Bosses" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="PlayerWeaponFires" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="EnemyWeaponFires" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="Pickups" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="VFX" type="YSort" parent="GameWorld/MainGround"]
+
+[node name="Foreground" type="Node2D" parent="GameWorld"]
+
+[node name="Cameras" type="Node2D" parent="GameWorld"]
+
+[node name="Managers" type="Node" parent="."]
+
+[node name="PlayerWeaponFireManager" parent="Managers" instance=ExtResource( 3 )]
+player_weapon_fires_layer_path = NodePath("../../GameWorld/MainGround/PlayerWeaponFires")
+
+[node name="EnemySpawnManager" parent="Managers" instance=ExtResource( 4 )]
+enemies_layer_path = NodePath("../../GameWorld/MainGround/Enemies")
+vfx_layer_path = NodePath("../../GameWorld/MainGround/VFX")
+pickups_layer_path = NodePath("../../GameWorld/MainGround/Pickups")
+impact_scene = ExtResource( 5 )
+soul_cash_scene = ExtResource( 6 )
+
+[node name="EnvironmentSettings" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="EnvironmentSettings"]
+environment = SubResource( 1 )
+
+[node name="CanvasModulate" type="CanvasModulate" parent="EnvironmentSettings"]
+
+[node name="ScreenOverlays" type="Node" parent="."]
+
+[node name="HUD" parent="ScreenOverlays" instance=ExtResource( 2 )]
+
+[node name="UpgradeMenu" parent="ScreenOverlays" instance=ExtResource( 7 )]
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="RunCountdownTicker" type="Timer" parent="Timers"]
+one_shot = true
+
+[connection signal="timeout" from="Timers/RunCountdownTicker" to="." method="_on_RunCountdownTicker_timeout"]

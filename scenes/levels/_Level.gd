@@ -1,16 +1,16 @@
 extends Node
 
+export (NodePath) var hud_path:NodePath
+onready var hud:CanvasLayer= get_node(hud_path)
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+export (NodePath) var run_countdown_ticker_path:NodePath
+onready var run_countdown_ticker:Timer= get_node(run_countdown_ticker_path)
+
+func _ready()->void:
+    run_countdown_ticker.start(1)
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _on_RunCountdownTicker_timeout():
+    Run.tick_timer_down()
+    hud.update_timer()
+    run_countdown_ticker.start(1)

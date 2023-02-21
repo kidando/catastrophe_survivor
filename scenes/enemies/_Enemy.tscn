@@ -1,0 +1,131 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scenes/enemies/_Enemy.gd" type="Script" id=1]
+[ext_resource path="res://assets/sound_fx/snd_enemy_hit.wav" type="AudioStream" id=2]
+[ext_resource path="res://text_resources/fonts/font_modern_dos.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/sound_fx/snd_enemy_killed.wav" type="AudioStream" id=4]
+
+[sub_resource type="Shader" id=2]
+code = "/*
+Shader from Godot Shaders - the free shader library.
+godotshaders.com/shader/teleport-effect
+
+This shader is under CC0 license. Feel free to use, improve and 
+change this shader according to your needs and consider sharing 
+the modified result on godotshaders.com.
+*/
+
+shader_type canvas_item;
+
+uniform float progress : hint_range(0.0, 1.0);
+uniform float noise_desnity = 60;
+uniform float beam_size : hint_range(0.01, 0.15);
+uniform vec4 color : hint_color = vec4(0.0, 1.02, 1.2, 1.0);
+
+// We are generating our own noise here. You could experiment with the 
+// built in SimplexNoise or your own noise texture for other effects.
+vec2 random(vec2 uv){
+    uv = vec2( dot(uv, vec2(127.1,311.7) ),
+               dot(uv, vec2(269.5,183.3) ) );
+    return -1.0 + 2.0 * fract(sin(uv) * 43758.5453123);
+}
+
+float noise(vec2 uv) {
+    vec2 uv_index = floor(uv);
+    vec2 uv_fract = fract(uv);
+
+    vec2 blur = smoothstep(0.0, 1.0, uv_fract);
+
+    return mix( mix( dot( random(uv_index + vec2(0.0,0.0) ), uv_fract - vec2(0.0,0.0) ),
+                     dot( random(uv_index + vec2(1.0,0.0) ), uv_fract - vec2(1.0,0.0) ), blur.x),
+                mix( dot( random(uv_index + vec2(0.0,1.0) ), uv_fract - vec2(0.0,1.0) ),
+                     dot( random(uv_index + vec2(1.0,1.0) ), uv_fract - vec2(1.0,1.0) ), blur.x), blur.y) * 0.5 + 0.5;
+}
+
+void fragment()
+{
+	vec4 tex = texture(TEXTURE, UV);
+	
+	float noise = noise(UV * noise_desnity) * UV.y;
+	
+	float d1 = step(progress, noise);
+	float d2 = step(progress - beam_size, noise);
+	
+	vec3 beam = vec3(d2 - d1) * color.rgb;
+	
+	tex.rgb += beam;
+	tex.a *= d2;
+	
+	COLOR = tex;
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/progress = 0.0
+shader_param/noise_desnity = 40.0
+shader_param/beam_size = 0.1
+shader_param/color = Color( 0, 1.6, 1.6, 1 )
+
+[sub_resource type="CanvasItemMaterial" id=1]
+light_mode = 1
+
+[node name="_Enemy" type="KinematicBody2D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource( 1 )
+take_damage_audio_path = NodePath("Sounds/TakeDamageAudio")
+damage_ui_container_path = NodePath("DamageUI")
+damage_label_path = NodePath("DamageUI/DamageLabel")
+disappear_tween_path = NodePath("DamageUI/DisappearTween")
+disappeart_timer_path = NodePath("DamageUI/DamageDisappearTimer")
+sprite_path = NodePath("AnimatedSprite")
+disintegration_tween_path = NodePath("DisintegrationTween")
+death_audio_path = NodePath("Sounds/DeathAudio")
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Sounds" type="Node2D" parent="."]
+
+[node name="TakeDamageAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource( 2 )
+bus = "SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource( 4 )
+bus = "SFX"
+
+[node name="DamageUI" type="CenterContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -85.0
+margin_right = 50.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="DamageLabel" type="Label" parent="DamageUI"]
+material = SubResource( 1 )
+margin_left = 38.0
+margin_top = 46.0
+margin_right = 62.0
+margin_bottom = 54.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 3 )
+text = "100"
+align = 1
+
+[node name="DamageDisappearTimer" type="Timer" parent="DamageUI"]
+one_shot = true
+
+[node name="DisappearTween" type="Tween" parent="DamageUI"]
+
+[node name="DisintegrationTween" type="Tween" parent="."]
+
+[connection signal="timeout" from="DamageUI/DamageDisappearTimer" to="." method="_on_DamageDisappearTimer_timeout"]
+[connection signal="tween_all_completed" from="DisintegrationTween" to="." method="_on_DisintegrationTween_tween_all_completed"]

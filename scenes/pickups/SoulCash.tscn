@@ -1,0 +1,44 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://assets/sprites/pickups/soul_cash_03.png" type="Texture" id=1]
+[ext_resource path="res://assets/sprites/pickups/soul_cash_02.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/pickups/soul_cash_01.png" type="Texture" id=3]
+[ext_resource path="res://scenes/pickups/SoulCash.gd" type="Script" id=4]
+[ext_resource path="res://assets/sprites/pickups/soul_cash_05.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/pickups/soul_cash_04.png" type="Texture" id=6]
+
+[sub_resource type="CanvasItemMaterial" id=3]
+light_mode = 1
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 2 ), ExtResource( 1 ), ExtResource( 6 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 10.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 8.0
+
+[node name="SoulCash" type="Node2D"]
+script = ExtResource( 4 )
+sprite_path = NodePath("AnimatedSprite")
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+modulate = Color( 1.6, 1.6, 1.6, 1 )
+material = SubResource( 3 )
+position = Vector2( 0, -5 )
+frames = SubResource( 1 )
+frame = 2
+playing = true
+
+[node name="PickupArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
+position = Vector2( 0, -3 )
+shape = SubResource( 2 )
+
+[connection signal="body_entered" from="PickupArea" to="." method="_on_PickupArea_body_entered"]

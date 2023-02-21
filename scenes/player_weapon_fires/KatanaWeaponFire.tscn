@@ -1,0 +1,47 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_04.png" type="Texture" id=1]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_08.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_01.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_05.png" type="Texture" id=4]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_06.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_07.png" type="Texture" id=6]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_03.png" type="Texture" id=7]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_02.png" type="Texture" id=8]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/katana_weapon_fire_09.png" type="Texture" id=9]
+[ext_resource path="res://scenes/player_weapon_fires/KatanaWeaponFire.gd" type="Script" id=10]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 8 ), ExtResource( 7 ), ExtResource( 1 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 2 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "default",
+"speed": 10.0
+} ]
+
+[node name="KatanaWeaponFire" type="Node2D"]
+z_index = 9
+script = ExtResource( 10 )
+sprite_path = NodePath("AnimatedSprite")
+weapon_area_path = NodePath("WeaponArea")
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -0.5, -19 )
+frames = SubResource( 1 )
+frame = 4
+
+[node name="WeaponArea" type="Area2D" parent="."]
+position = Vector2( -0.5, -19 )
+collision_layer = 16
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="WeaponArea"]
+polygon = PoolVector2Array( -9, -11, 45, -5, 67, 12, 33, 35, -12, 48, 42, 49, 91, 30, 96, 8, 57, -17 )
+
+[node name="DisappearTween" type="Tween" parent="."]
+
+[connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="frame_changed" from="AnimatedSprite" to="." method="_on_AnimatedSprite_frame_changed"]
+[connection signal="body_entered" from="WeaponArea" to="." method="_on_WeaponArea_body_entered"]
+[connection signal="tween_all_completed" from="DisappearTween" to="." method="_on_DisappearTween_tween_all_completed"]

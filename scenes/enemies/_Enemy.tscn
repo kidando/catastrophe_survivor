@@ -82,6 +82,7 @@ disappeart_timer_path = NodePath("DamageUI/DamageDisappearTimer")
 sprite_path = NodePath("AnimatedSprite")
 disintegration_tween_path = NodePath("DisintegrationTween")
 death_audio_path = NodePath("Sounds/DeathAudio")
+collision_shape_path = NodePath("CollisionShape2D")
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 material = SubResource( 3 )

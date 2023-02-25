@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/levels/_Level.gd" type="Script" id=1]
 [ext_resource path="res://scenes/ui/HUD.tscn" type="PackedScene" id=2]
@@ -6,7 +6,10 @@
 [ext_resource path="res://scenes/managers/EnemySpawnManager.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/vfx/Impact.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/pickups/SoulCash.tscn" type="PackedScene" id=6]
-[ext_resource path="res://scenes/ui/UpgradeMenu.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/player_weapon_fires/KunaiWeaponFire.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/player_weapon_fires/ForbiddenScrollWeaponFire.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/ui/UpgradeMenu.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/player_weapon_fires/KatanaSlashProjectile.tscn" type="PackedScene" id=10]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -23,6 +26,8 @@ glow_blend_mode = 1
 script = ExtResource( 1 )
 hud_path = NodePath("ScreenOverlays/HUD")
 run_countdown_ticker_path = NodePath("Timers/RunCountdownTicker")
+screen_overlay_layer_path = NodePath("ScreenOverlays")
+upgrade_menu_scene = ExtResource( 9 )
 
 [node name="GameWorld" type="Node" parent="."]
 
@@ -52,6 +57,10 @@ run_countdown_ticker_path = NodePath("Timers/RunCountdownTicker")
 
 [node name="PlayerWeaponFireManager" parent="Managers" instance=ExtResource( 3 )]
 player_weapon_fires_layer_path = NodePath("../../GameWorld/MainGround/PlayerWeaponFires")
+enemies_layer_path = NodePath("../../GameWorld/MainGround/Enemies")
+kunai_weapon_fire_scene = ExtResource( 7 )
+forbidden_scroll_weapon_fire_scene = ExtResource( 8 )
+katana_slash_projectile_scene = ExtResource( 10 )
 
 [node name="EnemySpawnManager" parent="Managers" instance=ExtResource( 4 )]
 enemies_layer_path = NodePath("../../GameWorld/MainGround/Enemies")
@@ -70,8 +79,6 @@ environment = SubResource( 1 )
 [node name="ScreenOverlays" type="Node" parent="."]
 
 [node name="HUD" parent="ScreenOverlays" instance=ExtResource( 2 )]
-
-[node name="UpgradeMenu" parent="ScreenOverlays" instance=ExtResource( 7 )]
 
 [node name="Timers" type="Node" parent="."]
 

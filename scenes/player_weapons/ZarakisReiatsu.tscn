@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/player_weapons/ZarakisReiatsu.gd" type="Script" id=1]
+[ext_resource path="res://scenes/player_weapon_fires/ReiatsuRing.tscn" type="PackedScene" id=2]
+
+[node name="ZarakisReiatsu" type="Node2D"]
+script = ExtResource( 1 )
+hazard_area_path = NodePath("HazardArea")
+hazard_area_monitoring_toggle_timer_path = NodePath("HazardAreaMonitorToggleTimer")
+
+[node name="ReiatsuRing" parent="." instance=ExtResource( 2 )]
+position = Vector2( -5, 0 )
+
+[node name="ReiatsuRing2" parent="." instance=ExtResource( 2 )]
+position = Vector2( -5, 0 )
+
+[node name="HazardArea" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HazardArea"]
+polygon = PoolVector2Array( -69, -1, -45, -24, -5, -32, 43, -24, 67, 0, 43, 24, -5, 32, -45, 24 )
+
+[node name="HazardAreaMonitorToggleTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="HazardArea" to="." method="_on_HazardArea_body_entered"]
+[connection signal="timeout" from="HazardAreaMonitorToggleTimer" to="." method="_on_HazardAreaMonitorToggleTimer_timeout"]

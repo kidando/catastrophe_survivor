@@ -4,3 +4,5 @@
 
 [node name="PlayerWeaponFireManager" type="Node"]
 script = ExtResource( 1 )
+
+[node name="Petal" type="Timer" parent="."]

@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/player_weapons/Kunai.gd" type="Script" id=1]
+[ext_resource path="res://assets/sound_fx/snd_kunai_throw.wav" type="AudioStream" id=2]
+
+[node name="Kunai" type="Node2D"]
+script = ExtResource( 1 )
+rate_of_fire_timer_path = NodePath("RateOfFireTimer")
+kunai_throw_audio_path = NodePath("Audio/KunaiThrowAudio")
+
+[node name="RateOfFireTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Audio" type="Node2D" parent="."]
+
+[node name="KunaiThrowAudio" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 2 )
+bus = "SFX"
+
+[connection signal="timeout" from="RateOfFireTimer" to="." method="_on_RateOfFireTimer_timeout"]

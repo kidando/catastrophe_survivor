@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/player_weapon_fires/ReiatsuRing.gd" type="Script" id=1]
+
+[node name="ReiatsuRing" type="Line2D"]
+points = PoolVector2Array( -64, 0, -40, -24, 0, -32, 48, -24, 72, 0, 48, 24, 0, 32, -40, 24, -64, 0 )
+width = 1.0
+default_color = Color( 1.53, 1.6, 1, 1 )
+script = ExtResource( 1 )

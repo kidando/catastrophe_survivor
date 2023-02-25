@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/levels/_Level.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/levels/Park.gd" type="Script" id=2]
 [ext_resource path="res://assets/tilesets/park_tileset.png" type="Texture" id=3]
 [ext_resource path="res://scenes/players/Player.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/cameras/GameCam.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/player_weapon_fires/BankaiZangetsu.tscn" type="PackedScene" id=6]
 
 [sub_resource type="TileSet" id=1]
 0/name = "g_plain"
@@ -793,8 +794,17 @@ current = true
 player_path = NodePath("../../MainGround/Players/Player")
 level_tilemap_path = NodePath("../../Background/ParkFloor")
 
+[node name="PlayerWeaponFireManager" parent="Managers" index="0"]
+player_path = NodePath("../../GameWorld/MainGround/Players/Player")
+bankai_slash = ExtResource( 6 )
+
 [node name="EnemySpawnManager" parent="Managers" index="1"]
 player_path = NodePath("../../GameWorld/MainGround/Players/Player")
 
 [node name="CanvasModulate" parent="EnvironmentSettings" index="1"]
 color = Color( 0.662745, 0.662745, 0.662745, 1 )
+
+[connection signal="forbidden_scroll_spirit_spawned" from="GameWorld/MainGround/Players/Player" to="Managers/PlayerWeaponFireManager" method="_on_Player_forbidden_scroll_spirit_spawned"]
+[connection signal="katana_bankai_activated" from="GameWorld/MainGround/Players/Player" to="Managers/PlayerWeaponFireManager" method="_on_Player_katana_bankai_activated"]
+[connection signal="katana_slah_projectile_fired" from="GameWorld/MainGround/Players/Player" to="Managers/PlayerWeaponFireManager" method="_on_Player_katana_slah_projectile_fired"]
+[connection signal="kunai_thrown" from="GameWorld/MainGround/Players/Player" to="Managers/PlayerWeaponFireManager" method="_on_Player_kunai_thrown"]

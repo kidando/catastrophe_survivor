@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/player_weapon_fires/BankaiZangetsu.gd" type="Script" id=1]
+[ext_resource path="res://assets/sprites/player_weapon_fires/katana/level_5/bankai_zangetsul.png" type="Texture" id=2]
+
+[sub_resource type="CanvasItemMaterial" id=2]
+light_mode = 1
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="BankaiZangetsu" type="KinematicBody2D"]
+modulate = Color( 1.6, 1.6, 1.6, 1 )
+collision_layer = 0
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 2 )
+frames = SubResource( 1 )
+
+[node name="LifespanTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+autostart = true
+
+[node name="HurtArea" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HurtArea"]
+polygon = PoolVector2Array( -175, -182, -60, -140, -3, -96, 56, -1, 2, 90, -92, 150, -179, 180, 37, 156, 112, 96, 170, 2, 119, -89, 33, -153 )
+
+[connection signal="timeout" from="LifespanTimer" to="." method="_on_LifespanTimer_timeout"]
+[connection signal="body_entered" from="HurtArea" to="." method="_on_HurtArea_body_entered"]

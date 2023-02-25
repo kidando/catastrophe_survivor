@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/snd_bankai.wav-f1933b14aa7d1c4d31cb169cd3919f49.sample"
+
+[deps]
+
+source_file="res://assets/sound_fx/snd_bankai.wav"
+dest_files=[ "res://.import/snd_bankai.wav-f1933b14aa7d1c4d31cb169cd3919f49.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

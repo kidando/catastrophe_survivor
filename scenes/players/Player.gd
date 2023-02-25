@@ -1,5 +1,9 @@
 extends KinematicBody2D
 
+signal kunai_thrown(_global_position, _weapon_data)
+signal forbidden_scroll_spirit_spawned(_global_position, _weapon_data)
+signal katana_slah_projectile_fired(_global_position,_weapon_data, _direction)
+signal katana_bankai_activated(_global_position,_weapon_data, _direction)
 
 var velocity:Vector2 = Vector2()
 var is_moving:bool = false
@@ -65,7 +69,28 @@ func add_weapon(_weapon:Dictionary)->void:
 	var _new_weapon = load(_weapon.scene_path).instance()
 	weapons_container.add_child(_new_weapon)
 	_new_weapon.start(_weapon)
+	match _weapon.name:
+		"Katana":
+			_new_weapon.connect("slash_projectile_fired",self,"_on_Katana_slash_projectile_fired",[],CONNECT_DEFERRED)
+			_new_weapon.connect("bankai_activated",self,"_on_Katana_bankai_activated",[],CONNECT_DEFERRED)
+		"Kunai":
+			_new_weapon.connect("thrown",self,"_on_Kunai_thrown",[],CONNECT_DEFERRED)
+		"Forbidden Scroll":
+			_new_weapon.connect("spirit_spawned",self,"_on_ForbiddenScroll_spirit_spawned",[],CONNECT_DEFERRED)
 
 
 func _on_Run_player_weapon_picked(_weapon:Dictionary)->void:
 	pass
+
+func _on_Kunai_thrown(_weapon_data:Dictionary)->void:
+	emit_signal("kunai_thrown",global_position, _weapon_data)
+
+func _on_ForbiddenScroll_spirit_spawned(_weapon_data:Dictionary)->void:
+	emit_signal("forbidden_scroll_spirit_spawned",global_position, _weapon_data)
+
+
+func _on_Katana_slash_projectile_fired(_weapon_data:Dictionary)->void:
+	emit_signal("katana_slah_projectile_fired",global_position,_weapon_data,sprite.flip_h) 
+
+func _on_Katana_bankai_activated(_weapon_data:Dictionary)->void:
+	emit_signal("katana_bankai_activated",global_position,_weapon_data, sprite.flip_h) 

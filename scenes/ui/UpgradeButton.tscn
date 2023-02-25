@@ -24,6 +24,7 @@ content_margin_bottom = 4.0
 bg_color = Color( 0.984314, 0.784314, 0.368627, 1 )
 
 [node name="UpgradeButton" type="PanelContainer"]
+pause_mode = 2
 margin_right = 120.0
 margin_bottom = 180.0
 rect_min_size = Vector2( 160, 180 )

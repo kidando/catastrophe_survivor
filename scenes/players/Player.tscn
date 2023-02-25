@@ -37,6 +37,7 @@ weapons_container_path = NodePath("Weapons")
 material = SubResource( 3 )
 position = Vector2( 3, -11 )
 frames = SubResource( 1 )
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

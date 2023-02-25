@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/player_weapons/Katana.gd" type="Script" id=1]
 [ext_resource path="res://scenes/player_weapon_fires/KatanaWeaponFire.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/sound_fx/snd_katana_slash.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/sound_fx/snd_bankai.wav" type="AudioStream" id=4]
 
 [node name="Katana" type="Node2D"]
 script = ExtResource( 1 )
@@ -10,6 +11,7 @@ katana_weapon_fire_scene = ExtResource( 2 )
 rate_of_fire_timer_path = NodePath("RateOfFireTimer")
 slash_audio_delay_path = NodePath("SlashAudioDelay")
 katana_slash_audio_path = NodePath("Audio/KatanaSlash")
+bankai_audio_path = NodePath("Audio/BankaiAudio")
 
 [node name="RateOfFireTimer" type="Timer" parent="."]
 one_shot = true
@@ -22,6 +24,16 @@ one_shot = true
 [node name="KatanaSlash" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource( 3 )
 bus = "SFX"
+
+[node name="BankaiAudio" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 4 )
+bus = "SFX"
+
+[node name="PetalPosition" type="Position2D" parent="."]
+position = Vector2( -83, 0 )
+__meta__ = {
+"_gizmo_extents_": 100.0
+}
 
 [connection signal="timeout" from="RateOfFireTimer" to="." method="_on_RateOfFireTimer_timeout"]
 [connection signal="timeout" from="SlashAudioDelay" to="." method="_on_SlashAudioDelay_timeout"]

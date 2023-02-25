@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://text_resources/fonts/font_modern_dos.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scenes/ui/UpgradeButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/ui/UpgradeMenu.gd" type="Script" id=3]
+[ext_resource path="res://assets/sound_fx/snd_level_up.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/sound_fx/snd_ui_upgrade_selected.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/sound_fx/snd_ui_upgrade_move_left_right.wav" type="AudioStream" id=6]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 0.541176 )
@@ -11,14 +15,50 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color( 1, 1, 1, 1 )
 
-[node name="UpgradeMenu" type="CanvasLayer"]
+[sub_resource type="StyleBoxFlat" id=2]
+resource_local_to_scene = true
+bg_color = Color( 0.176471, 0.356863, 0.521569, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 1 )
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[sub_resource type="StyleBoxFlat" id=3]
+resource_local_to_scene = true
+bg_color = Color( 0.176471, 0.356863, 0.521569, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+resource_local_to_scene = true
+bg_color = Color( 0.176471, 0.356863, 0.521569, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 1 )
+
+[node name="UpgradeMenu" type="CanvasLayer"]
+pause_mode = 2
+script = ExtResource( 3 )
+upgrades_container_path = NodePath("MainContainer/PanelContainer/MarginContainer/VBoxContainer/UpgradesContainer")
+visibility_tween_path = NodePath("VisibilityTween")
+movement_tween_path = NodePath("MovementTween")
+main_container_path = NodePath("MainContainer")
+launch_upgrade_menu_audio_path = NodePath("UpgradeMenuStartAudio")
+select_upgrade_audio_path = NodePath("UpgradeSelectedAudio")
+move_left_right_audio_path = NodePath("MoveLeftRightAudio")
+
+[node name="BG" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.423529 )
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MainContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 32
@@ -26,14 +66,14 @@ custom_constants/margin_top = 32
 custom_constants/margin_left = 32
 custom_constants/margin_bottom = 64
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MainContainer"]
 margin_left = 32.0
 margin_top = 32.0
 margin_right = 608.0
 margin_bottom = 296.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/PanelContainer"]
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 574.0
@@ -43,26 +83,26 @@ custom_constants/margin_top = 16
 custom_constants/margin_left = 16
 custom_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/PanelContainer/MarginContainer"]
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 556.0
 margin_bottom = 244.0
 custom_constants/separation = 8
 
-[node name="UpgradeTitleLabel" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="UpgradeTitleLabel" type="Label" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer"]
 margin_right = 540.0
 margin_bottom = 8.0
 custom_fonts/font = ExtResource( 1 )
 text = "SELECT UPGRADE"
 align = 1
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer"]
 margin_top = 16.0
 margin_right = 540.0
 margin_bottom = 20.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="UpgradesContainer" type="HBoxContainer" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 540.0
 margin_bottom = 216.0
@@ -70,22 +110,43 @@ size_flags_vertical = 3
 custom_constants/separation = 16
 alignment = 1
 
-[node name="UpgradeButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+[node name="UpgradeButton" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer/UpgradesContainer" instance=ExtResource( 2 )]
 margin_left = 14.0
 margin_right = 174.0
 margin_bottom = 188.0
+custom_styles/panel = SubResource( 2 )
 
-[node name="UpgradeButton2" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+[node name="UpgradeButton2" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer/UpgradesContainer" instance=ExtResource( 2 )]
 margin_left = 190.0
 margin_right = 350.0
 margin_bottom = 188.0
+custom_styles/panel = SubResource( 3 )
 
-[node name="UpgradeButton3" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+[node name="UpgradeButton3" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer/UpgradesContainer" instance=ExtResource( 2 )]
 margin_left = 366.0
 margin_right = 526.0
 margin_bottom = 188.0
+custom_styles/panel = SubResource( 4 )
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MainContainer/PanelContainer/MarginContainer/VBoxContainer"]
 margin_top = 224.0
 margin_right = 540.0
 margin_bottom = 228.0
+
+[node name="VisibilityTween" type="Tween" parent="."]
+
+[node name="MovementTween" type="Tween" parent="."]
+
+[node name="UpgradeMenuStartAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+bus = "SFX"
+
+[node name="UpgradeSelectedAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+bus = "SFX"
+
+[node name="MoveLeftRightAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+bus = "SFX"
+
+[connection signal="tween_all_completed" from="VisibilityTween" to="." method="_on_VisibilityTween_tween_all_completed"]

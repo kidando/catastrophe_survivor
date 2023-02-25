@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/player_weapons/ForbiddenScroll.gd" type="Script" id=1]
+[ext_resource path="res://assets/sound_fx/snd_vengful_spirit_spawn.wav" type="AudioStream" id=2]
+
+[node name="ForbiddenScroll" type="Node2D"]
+script = ExtResource( 1 )
+rate_of_fire_timer_path = NodePath("RateOfFireTimer")
+sprit_spawned_audio_path = NodePath("SpawnSpiritAudio")
+
+[node name="RateOfFireTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="SpawnSpiritAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 2 )
+bus = "SFX"
+
+[connection signal="timeout" from="RateOfFireTimer" to="." method="_on_RateOfFireTimer_timeout"]

@@ -27,6 +27,10 @@ onready var disintegration_tween:Tween= get_node(disintegration_tween_path)
 export (NodePath) var death_audio_path:NodePath
 onready var death_audio:AudioStreamPlayer2D= get_node(death_audio_path)
 
+export (NodePath) var collision_shape_path:NodePath
+onready var collision_shape:CollisionShape2D= get_node(collision_shape_path)
+
+
 
 var player = null
 
@@ -114,6 +118,7 @@ func take_damage(_damage_amount:int)->void:
 		disintegration_tween.interpolate_property(self,"disintegration_visibility",0,1,3)
 		disintegration_tween.start()
 		movement_speed = 0
+		collision_shape.queue_free()
 
 
 	disappear_tween.stop_all()
@@ -139,3 +144,4 @@ func _on_DamageDisappearTimer_timeout():
 
 func _on_DisintegrationTween_tween_all_completed():
 	queue_free()
+

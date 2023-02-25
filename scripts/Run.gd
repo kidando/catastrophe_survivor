@@ -18,8 +18,8 @@ var player_defaults: Dictionary ={
 	"xp":0,
 	"xp_max":5,
 	"score":0,
-	"max_weapons":4,
-	"default_weapon":Weapons.list[0],
+	"max_weapons":3,
+	"default_weapon":Weapons.list[2],
 	"weapon_inventory":[]
 
 }
@@ -92,3 +92,6 @@ func update_player_score(_points:int)->void:
 func add_vanquished_enemy(_enemy:Dictionary)->void:
 	enemy_run.vanquished.append(_enemy)
 	emit_signal("enemy_vanquished")
+
+func apply_selected_upgrade(_selected_upgrade:Dictionary)->void:
+	print_debug("I was deemed worthy")
